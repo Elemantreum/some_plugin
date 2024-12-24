@@ -11,16 +11,14 @@ function getProcessMemoryUsage(processName: string, callback: (memory: string) =
             return;
         }
 
-        
-
         // Разбираем вывод команды tasklist, чтобы извлечь память для процесса
-        const processes = stdout.split(' \r\n');  // Разделяем вывод на строки
+        const processes = stdout.split('\r\n');  // Разделяем вывод на строки
         let totalMemory = 0;
 
         processes.forEach(process => {
             if (process.includes(processName)) {
                 const parts = process.split(/\s+/);  // Разделяем строку на части
-                const memory = parts[4];  // Память в килобайтах (5-й столбец)
+                const memory = parts[4].replace(/[^\d]/g, '');  // Память в килобайтах (5-й столбец), удаляем все нецифровые символы
                 totalMemory += parseInt(memory); // Суммируем память для всех процессов с таким именем
             }
         });
@@ -50,7 +48,8 @@ function getDebugProcessName(callback: (processName: string) => void) {
 
 // Функция для обновления статусбара с информацией о памяти
 function updateStatusBar() {
-    const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
+    vscode.commands.executeCommand('setContext', 'statusBarItems', true); // Proposed API usage
+    const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
     statusBarItem.text = 'Debug Process Memory: Loading...';
     statusBarItem.show();
 
@@ -61,7 +60,7 @@ function updateStatusBar() {
                 statusBarItem.text = `Debug Process Memory: ${memoryInMB} MB`;
             });
         });
-    }, 2000); // Обновление каждые 2 секунды
+    }, 500); // Обновление каждые 2 секунды
 }
 
 // Функция активации расширения

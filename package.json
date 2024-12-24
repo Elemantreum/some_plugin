@@ -6,26 +6,21 @@
   "engines": {
     "vscode": "^1.95.0"
   },
+  "enabledApiProposals": ["statusBarItem"],
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+      "onDebug",
+      "onDebugStart"
+  ],
   "main": "./out/extension.js",
     "contributes": {
-      "commands": [
-        {
-          "command": "memoryMonitor.start",
-          "title": "Start Memory Monitor"
-        },
-        {
-          "command": "memoryMonitor.stop",
-          "title": "Stop Memory Monitor"
-        }
-      ],
+      "commands": [],
       "statusBarItems": [
         {
           "id": "memoryMonitor",
-          "alignment": "right",
+          "alignment": "left",
           "priority": 100
         }
       ]
